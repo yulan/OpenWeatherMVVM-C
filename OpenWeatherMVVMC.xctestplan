@@ -1,0 +1,64 @@
+{
+  "configurations" : [
+    {
+      "id" : "6B0E2A4C-9D1F-4C3B-8E7A-1F2D3C4B5A60",
+      "name" : "Default",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:OpenWeatherMVVMC.xcodeproj",
+          "identifier" : "C0DE00000000000000000040",
+          "name" : "OpenWeatherMVVMC"
+        },
+        {
+          "containerPath" : "container:Packages\/OpenWeatherCore",
+          "identifier" : "Domain",
+          "name" : "Domain"
+        },
+        {
+          "containerPath" : "container:Packages\/OpenWeatherCore",
+          "identifier" : "DataLayer",
+          "name" : "DataLayer"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Packages\/OpenWeatherCore",
+        "identifier" : "DomainTests",
+        "name" : "DomainTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages\/OpenWeatherCore",
+        "identifier" : "DataLayerTests",
+        "name" : "DataLayerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:OpenWeatherMVVMC.xcodeproj",
+        "identifier" : "C0DE00000000000000000050",
+        "name" : "OpenWeatherMVVMCTests"
+      }
+    },
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:OpenWeatherMVVMC.xcodeproj",
+        "identifier" : "C0DE00000000000000000055",
+        "name" : "OpenWeatherMVVMCUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
