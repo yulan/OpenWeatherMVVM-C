@@ -1,0 +1,568 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C0DE00000000000000000101 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = C0DE00000000000000000091 /* Domain */; };
+		C0DE00000000000000000102 /* DataLayer in Frameworks */ = {isa = PBXBuildFile; productRef = C0DE00000000000000000092 /* DataLayer */; };
+		C0DE00000000000000000103 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = C0DE00000000000000000093 /* Domain */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C0DE00000000000000000060 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0DE00000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0DE00000000000000000040;
+			remoteInfo = OpenWeatherMVVMC;
+		};
+		C0DE00000000000000000062 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0DE00000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0DE00000000000000000040;
+			remoteInfo = OpenWeatherMVVMC;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		C0DE00000000000000000020 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
+		C0DE00000000000000000021 /* Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.example.xcconfig; sourceTree = "<group>"; };
+		C0DE00000000000000000022 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C0DE00000000000000000023 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		C0DE00000000000000000030 /* OpenWeatherMVVMC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenWeatherMVVMC.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0DE00000000000000000031 /* OpenWeatherMVVMCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWeatherMVVMCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0DE00000000000000000032 /* OpenWeatherMVVMCUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWeatherMVVMCUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0DE00000000000000000024 /* OpenWeatherCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OpenWeatherCore; path = Packages/OpenWeatherCore; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		C0DE00000000000000000010 /* OpenWeatherMVVMC */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = OpenWeatherMVVMC;
+			sourceTree = "<group>";
+		};
+		C0DE00000000000000000011 /* OpenWeatherMVVMCTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = OpenWeatherMVVMCTests;
+			sourceTree = "<group>";
+		};
+		C0DE00000000000000000012 /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		C0DE00000000000000000013 /* OpenWeatherMVVMCUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = OpenWeatherMVVMCUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C0DE00000000000000000042 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0DE00000000000000000101 /* Domain in Frameworks */,
+				C0DE00000000000000000102 /* DataLayer in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0DE00000000000000000052 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0DE00000000000000000103 /* Domain in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0DE00000000000000000057 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C0DE00000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				C0DE00000000000000000023 /* README.md */,
+				C0DE00000000000000000024 /* OpenWeatherCore */,
+				C0DE00000000000000000010 /* OpenWeatherMVVMC */,
+				C0DE00000000000000000011 /* OpenWeatherMVVMCTests */,
+				C0DE00000000000000000013 /* OpenWeatherMVVMCUITests */,
+				C0DE00000000000000000012 /* Shared */,
+				C0DE00000000000000000004 /* Configurations */,
+				C0DE00000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C0DE00000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C0DE00000000000000000030 /* OpenWeatherMVVMC.app */,
+				C0DE00000000000000000031 /* OpenWeatherMVVMCTests.xctest */,
+				C0DE00000000000000000032 /* OpenWeatherMVVMCUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C0DE00000000000000000004 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				C0DE00000000000000000020 /* Base.xcconfig */,
+				C0DE00000000000000000021 /* Secrets.example.xcconfig */,
+				C0DE00000000000000000022 /* Info.plist */,
+			);
+			path = Configurations;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C0DE00000000000000000040 /* OpenWeatherMVVMC */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0DE00000000000000000071 /* Build configuration list for PBXNativeTarget "OpenWeatherMVVMC" */;
+			buildPhases = (
+				C0DE00000000000000000041 /* Sources */,
+				C0DE00000000000000000042 /* Frameworks */,
+				C0DE00000000000000000043 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C0DE00000000000000000010 /* OpenWeatherMVVMC */,
+				C0DE00000000000000000012 /* Shared */,
+			);
+			name = OpenWeatherMVVMC;
+			packageProductDependencies = (
+				C0DE00000000000000000091 /* Domain */,
+				C0DE00000000000000000092 /* DataLayer */,
+			);
+			productName = OpenWeatherMVVMC;
+			productReference = C0DE00000000000000000030 /* OpenWeatherMVVMC.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C0DE00000000000000000050 /* OpenWeatherMVVMCTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0DE00000000000000000072 /* Build configuration list for PBXNativeTarget "OpenWeatherMVVMCTests" */;
+			buildPhases = (
+				C0DE00000000000000000051 /* Sources */,
+				C0DE00000000000000000052 /* Frameworks */,
+				C0DE00000000000000000053 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C0DE00000000000000000061 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C0DE00000000000000000011 /* OpenWeatherMVVMCTests */,
+			);
+			name = OpenWeatherMVVMCTests;
+			packageProductDependencies = (
+				C0DE00000000000000000093 /* Domain */,
+			);
+			productName = OpenWeatherMVVMCTests;
+			productReference = C0DE00000000000000000031 /* OpenWeatherMVVMCTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		C0DE00000000000000000055 /* OpenWeatherMVVMCUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0DE00000000000000000073 /* Build configuration list for PBXNativeTarget "OpenWeatherMVVMCUITests" */;
+			buildPhases = (
+				C0DE00000000000000000056 /* Sources */,
+				C0DE00000000000000000057 /* Frameworks */,
+				C0DE00000000000000000058 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C0DE00000000000000000063 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C0DE00000000000000000013 /* OpenWeatherMVVMCUITests */,
+				C0DE00000000000000000012 /* Shared */,
+			);
+			name = OpenWeatherMVVMCUITests;
+			productName = OpenWeatherMVVMCUITests;
+			productReference = C0DE00000000000000000032 /* OpenWeatherMVVMCUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C0DE00000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					C0DE00000000000000000040 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					C0DE00000000000000000050 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = C0DE00000000000000000040;
+					};
+					C0DE00000000000000000055 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = C0DE00000000000000000040;
+					};
+				};
+			};
+			buildConfigurationList = C0DE00000000000000000070 /* Build configuration list for PBXProject "OpenWeatherMVVMC" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				fr,
+				Base,
+			);
+			mainGroup = C0DE00000000000000000002;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				C0DE00000000000000000090 /* XCLocalSwiftPackageReference "Packages/OpenWeatherCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = C0DE00000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C0DE00000000000000000040 /* OpenWeatherMVVMC */,
+				C0DE00000000000000000050 /* OpenWeatherMVVMCTests */,
+				C0DE00000000000000000055 /* OpenWeatherMVVMCUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C0DE00000000000000000043 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0DE00000000000000000053 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0DE00000000000000000058 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C0DE00000000000000000041 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0DE00000000000000000051 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0DE00000000000000000056 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C0DE00000000000000000061 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0DE00000000000000000040 /* OpenWeatherMVVMC */;
+			targetProxy = C0DE00000000000000000060 /* PBXContainerItemProxy */;
+		};
+		C0DE00000000000000000063 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0DE00000000000000000040 /* OpenWeatherMVVMC */;
+			targetProxy = C0DE00000000000000000062 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		C0DE00000000000000000080 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		C0DE00000000000000000081 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C0DE00000000000000000082 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C0DE00000000000000000020 /* Base.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 849A3KTLW5;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Configurations/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Weather";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to show the weather where you are.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = YULan.OpenWeatherMVVMC;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C0DE00000000000000000083 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C0DE00000000000000000020 /* Base.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 849A3KTLW5;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Configurations/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Weather";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to show the weather where you are.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = YULan.OpenWeatherMVVMC;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C0DE00000000000000000084 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = YULan.OpenWeatherMVVMCTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenWeatherMVVMC.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenWeatherMVVMC";
+			};
+			name = Debug;
+		};
+		C0DE00000000000000000085 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = YULan.OpenWeatherMVVMCTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenWeatherMVVMC.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenWeatherMVVMC";
+			};
+			name = Release;
+		};
+		C0DE00000000000000000086 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = YULan.OpenWeatherMVVMCUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = OpenWeatherMVVMC;
+			};
+			name = Debug;
+		};
+		C0DE00000000000000000087 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = YULan.OpenWeatherMVVMCUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = OpenWeatherMVVMC;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C0DE00000000000000000070 /* Build configuration list for PBXProject "OpenWeatherMVVMC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0DE00000000000000000080 /* Debug */,
+				C0DE00000000000000000081 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0DE00000000000000000071 /* Build configuration list for PBXNativeTarget "OpenWeatherMVVMC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0DE00000000000000000082 /* Debug */,
+				C0DE00000000000000000083 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0DE00000000000000000072 /* Build configuration list for PBXNativeTarget "OpenWeatherMVVMCTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0DE00000000000000000084 /* Debug */,
+				C0DE00000000000000000085 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0DE00000000000000000073 /* Build configuration list for PBXNativeTarget "OpenWeatherMVVMCUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0DE00000000000000000086 /* Debug */,
+				C0DE00000000000000000087 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		C0DE00000000000000000090 /* XCLocalSwiftPackageReference "Packages/OpenWeatherCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/OpenWeatherCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C0DE00000000000000000091 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Domain;
+		};
+		C0DE00000000000000000092 /* DataLayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DataLayer;
+		};
+		C0DE00000000000000000093 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Domain;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = C0DE00000000000000000001 /* Project object */;
+}

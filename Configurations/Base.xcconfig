@@ -1,0 +1,10 @@
+// Shared build settings for the app target.
+//
+// API keys are NOT committed. Create `Secrets.xcconfig` next to this file
+// (see `Secrets.example.xcconfig`); it is git-ignored and optional, so a fresh
+// clone still builds — requests simply fail with an "unauthorized" error.
+
+OPENWEATHER_API_KEY =
+UNSPLASH_ACCESS_KEY =
+
+#include? "Secrets.xcconfig"
