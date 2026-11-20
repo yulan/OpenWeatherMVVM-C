@@ -15,15 +15,20 @@ struct TimeoutError: Error, Equatable {}
 /// screen, the user may take as long as they like to answer. That time must
 /// not count against the "no GPS fix" timeout.
 final class Watchdog: Sendable {
+    typealias Instant = ContinuousClock.Instant
+
     private let timeout: Duration
     private let pollInterval: Duration
     /// `nil` while suspended.
-    private let deadline: Mutex<ContinuousClock.Instant?>
+    private let deadline: Mutex<Instant?>
 
-    init(timeout: Duration, pollInterval: Duration = .milliseconds(250)) {
+    /// Every method takes the current instant as a parameter (defaulting to
+    /// `.now`), so the countdown rules are unit-tested with explicit instants
+    /// instead of real sleeps that flake on a busy CI machine.
+    init(timeout: Duration, pollInterval: Duration = .milliseconds(250), startingAt start: Instant = .now) {
         self.timeout = timeout
         self.pollInterval = pollInterval
-        self.deadline = Mutex(.now + timeout)
+        self.deadline = Mutex(start + timeout)
     }
 
     func suspend() {
@@ -31,20 +36,23 @@ final class Watchdog: Sendable {
     }
 
     /// Restarts a full countdown if suspended; no-op if already running.
-    func resume() {
-        deadline.withLock { if $0 == nil { $0 = .now + timeout } }
+    func resume(at now: Instant = .now) {
+        deadline.withLock { if $0 == nil { $0 = now + timeout } }
+    }
+
+    /// Never true while suspended.
+    func isExpired(at now: Instant = .now) -> Bool {
+        deadline.withLock { $0.map { now >= $0 } ?? false }
     }
 
     /// Throws `TimeoutError` once the deadline passes. Never returns normally.
     func run() async throws -> Never {
         while true {
-            guard let current = deadline.withLock({ $0 }) else {
-                try await Task.sleep(for: pollInterval)
-                continue
-            }
-            if ContinuousClock.now >= current { throw TimeoutError() }
-            // Re-read after waking: the deadline may have been suspended or moved.
-            try await Task.sleep(until: min(current, .now + pollInterval), clock: .continuous)
+            if isExpired() { throw TimeoutError() }
+            // Wake at the deadline or the next poll, whichever comes first, then
+            // re-check: the deadline may have been suspended or moved meanwhile.
+            let wake = deadline.withLock { $0 }.map { min($0, .now + pollInterval) } ?? .now + pollInterval
+            try await Task.sleep(until: wake, clock: .continuous)
         }
     }
 }

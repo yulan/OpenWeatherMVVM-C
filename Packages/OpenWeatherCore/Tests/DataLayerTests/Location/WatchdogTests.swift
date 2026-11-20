@@ -27,31 +27,44 @@ struct WatchdogTests {
         }
     }
 
-    @Test("Time spent suspended (e.g. permission prompt on screen) doesn't count")
-    func suspendedTimeDoesNotCount() async throws {
-        let watchdog = Watchdog(timeout: .milliseconds(80), pollInterval: .milliseconds(5))
+    // MARK: Countdown rules: explicit instants, no sleeping, deterministic
 
-        let value = try await withWatchdog(watchdog) { watchdog in
-            watchdog.suspend()
-            try await Task.sleep(for: .milliseconds(200)) // > timeout while suspended
-            watchdog.resume()
-            try await Task.sleep(for: .milliseconds(20))  // < timeout after resuming
-            return "fix"
-        }
+    private let start = ContinuousClock.now
 
-        #expect(value == "fix")
+    @Test("Expires exactly when the timeout has elapsed")
+    func expiresAtDeadline() {
+        let watchdog = Watchdog(timeout: .seconds(10), startingAt: start)
+
+        #expect(!watchdog.isExpired(at: start + .seconds(9.9)))
+        #expect(watchdog.isExpired(at: start + .seconds(10)))
     }
 
-    @Test("Resuming restarts a full countdown")
-    func resumeRestartsCountdown() async {
-        let watchdog = Watchdog(timeout: .milliseconds(40), pollInterval: .milliseconds(5))
-        await #expect(throws: TimeoutError()) {
-            try await withWatchdog(watchdog) { watchdog in
-                watchdog.suspend()
-                watchdog.resume()
-                try await Task.sleep(for: .seconds(10))
-                return 0
-            }
-        }
+    @Test("Never expires while suspended")
+    func suspendedNeverExpires() {
+        let watchdog = Watchdog(timeout: .seconds(10), startingAt: start)
+
+        watchdog.suspend()
+
+        #expect(!watchdog.isExpired(at: start + .seconds(3600)))
+    }
+
+    @Test("Time spent suspended (e.g. permission prompt on screen) doesn't count")
+    func suspendedTimeDoesNotCount() {
+        let watchdog = Watchdog(timeout: .seconds(10), startingAt: start)
+
+        watchdog.suspend()                             // prompt shown at once
+        watchdog.resume(at: start + .seconds(60))      // user answers a minute later
+
+        #expect(!watchdog.isExpired(at: start + .seconds(69)))
+        #expect(watchdog.isExpired(at: start + .seconds(70)))
+    }
+
+    @Test("Resuming while already running doesn't extend the deadline")
+    func resumeWhileRunningIsNoOp() {
+        let watchdog = Watchdog(timeout: .seconds(10), startingAt: start)
+
+        watchdog.resume(at: start + .seconds(5))
+
+        #expect(watchdog.isExpired(at: start + .seconds(10)))
     }
 }
