@@ -19,15 +19,20 @@ public struct CoreLocationRepository: LocationRepository {
     }
 
     public func currentCoordinate() async throws(DomainError) -> Coordinate {
+        let signpost = Log.signposter.beginInterval("Location fix", id: Log.signposter.makeSignpostID())
+        defer { Log.signposter.endInterval("Location fix", signpost) }
+
         do {
             return try await withWatchdog(Watchdog(timeout: timeout)) { watchdog in
                 try await Self.firstFix(watchdog: watchdog)
             }
         } catch let error as DomainError {
+            Log.location.notice("No location: \(String(describing: error), privacy: .public)")
             throw error
         } catch is CancellationError {
             throw .cancelled
         } catch {
+            Log.location.error("No location fix within \(self.timeout, privacy: .public)")
             throw .locationUnavailable
         }
     }

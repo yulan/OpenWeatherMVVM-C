@@ -78,6 +78,7 @@ final class WeatherViewModel {
                 return
             }
             lastError = error
+            Log.ui.notice("Weather error shown (refresh: \(isRefreshing, privacy: .public)): \(String(describing: error), privacy: .public)")
             if isRefreshing {
                 refreshError = presentation
             } else {

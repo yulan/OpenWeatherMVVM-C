@@ -32,12 +32,18 @@ public struct FileWeatherStore: WeatherStore {
 
     public func lastWeather() -> Weather? {
         // A missing, corrupt or older-format file is a cache miss, never an error.
-        guard
-            let data = try? Data(contentsOf: fileURL),
-            let record = try? JSONDecoder().decode(WeatherRecord.self, from: data),
-            record.version == WeatherRecord.currentVersion
-        else { return nil }
-        return record.toDomain()
+        guard let data = try? Data(contentsOf: fileURL) else { return nil } // nothing saved yet
+        do {
+            let record = try JSONDecoder().decode(WeatherRecord.self, from: data)
+            guard record.version == WeatherRecord.currentVersion else {
+                Log.cache.notice("Ignoring saved weather in format v\(record.version, privacy: .public)")
+                return nil
+            }
+            return record.toDomain()
+        } catch {
+            Log.cache.error("Saved weather is unreadable: \(String(describing: error), privacy: .public)")
+            return nil
+        }
     }
 
     public func save(_ weather: Weather) throws {

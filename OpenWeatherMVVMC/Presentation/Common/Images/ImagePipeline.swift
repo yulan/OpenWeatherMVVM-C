@@ -70,6 +70,17 @@ actor ImagePipeline: ImageLoading, ImagePrefetching {
 
     @concurrent
     private static func load(_ url: URL, using fetch: Fetch) async throws -> UIImage {
+        let signpost = Log.signposter.beginInterval("Image download", id: Log.signposter.makeSignpostID())
+        defer { Log.signposter.endInterval("Image download", signpost) }
+        do {
+            return try await download(url, using: fetch)
+        } catch {
+            Log.images.error("Image failed (\(url.absoluteString, privacy: .private(mask: .hash))): \(String(describing: error), privacy: .public)")
+            throw error
+        }
+    }
+
+    private static func download(_ url: URL, using fetch: Fetch) async throws -> UIImage {
         let (data, response) = try await fetch(URLRequest(url: url))
         guard (200..<300).contains(response.statusCode) else {
             throw Failure.httpStatus(response.statusCode)

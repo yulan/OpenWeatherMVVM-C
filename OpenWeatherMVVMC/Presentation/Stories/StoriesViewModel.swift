@@ -92,6 +92,7 @@ final class StoriesViewModel {
         } catch {
             stories = []
             if let presentation = ErrorPresentation(error) {
+                Log.ui.notice("Stories error shown: \(String(describing: error), privacy: .public)")
                 state = .failed(presentation)
             }
         }

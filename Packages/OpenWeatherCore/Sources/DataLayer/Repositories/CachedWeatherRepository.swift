@@ -48,8 +48,13 @@ public struct CachedWeatherRepository: WeatherRepository {
     public func currentWeather(at coordinate: Coordinate) async throws(DomainError) -> Weather {
         do {
             let weather = try await remote.currentWeather(at: coordinate)
-            // Best effort: a full disk must not turn a successful request into an error.
-            try? store.save(weather)
+            // Best effort: a full disk must not turn a successful request into an error,
+            // but it must not go unnoticed either.
+            do {
+                try store.save(weather)
+            } catch {
+                Log.cache.error("Couldn't save weather: \(String(describing: error), privacy: .public)")
+            }
             return weather
         } catch {
             // Only connectivity problems fall back. A bad API key or a server
@@ -57,6 +62,7 @@ public struct CachedWeatherRepository: WeatherRepository {
             guard error == .offline, let saved = store.lastWeather(), isUsable(saved, at: coordinate) else {
                 throw error
             }
+            Log.cache.notice("Offline: serving weather observed at \(saved.observedAt, privacy: .public)")
             return saved
         }
     }

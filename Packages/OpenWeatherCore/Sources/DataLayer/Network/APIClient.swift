@@ -23,7 +23,24 @@ public struct APIClient: Sendable {
     @concurrent
     public func send<Response>(_ endpoint: Endpoint<Response>) async throws(NetworkError) -> Response {
         let request = try endpoint.makeRequest()
+        // Path only: the query string carries the API key and the user's coordinates.
+        let path = request.url?.path() ?? "-"
+        let signpost = Log.signposter.beginInterval("HTTP request", id: Log.signposter.makeSignpostID(), "\(path, privacy: .public)")
+        defer { Log.signposter.endInterval("HTTP request", signpost) }
 
+        do throws(NetworkError) {
+            let response: Response = try await execute(request)
+            Log.network.debug("\(path, privacy: .public) succeeded")
+            return response
+        } catch {
+            if error != .cancelled {
+                Log.network.error("\(path, privacy: .public) failed: \(String(describing: error), privacy: .public)")
+            }
+            throw error
+        }
+    }
+
+    private func execute<Response: Decodable>(_ request: URLRequest) async throws(NetworkError) -> Response {
         let data: Data
         let response: HTTPURLResponse
         do {
