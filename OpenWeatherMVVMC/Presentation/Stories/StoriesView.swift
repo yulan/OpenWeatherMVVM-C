@@ -10,6 +10,7 @@ import SwiftUI
 
 struct StoriesView: View {
     let viewModel: StoriesViewModel
+    let imageLoader: any ImageLoading
 
     var body: some View {
         ZStack {
@@ -23,7 +24,7 @@ struct StoriesView: View {
 
             case .loaded:
                 if let story = viewModel.currentStory {
-                    StoryPageView(story: story, viewModel: viewModel)
+                    StoryPageView(story: story, viewModel: viewModel, imageLoader: imageLoader)
                 }
 
             case let .failed(error):
@@ -74,10 +75,11 @@ private struct StoriesHeaderView: View {
 private struct StoryPageView: View {
     let story: Story
     let viewModel: StoriesViewModel
+    let imageLoader: any ImageLoading
 
     var body: some View {
         GeometryReader { proxy in
-            StoryImageView(url: story.imageURL) {
+            StoryImageView(url: story.imageURL, loader: imageLoader) {
                 viewModel.storyImageDidFinishLoading(story.id)
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
@@ -121,5 +123,5 @@ private struct StoryPageView: View {
 }
 
 #Preview {
-    StoriesView(viewModel: .preview)
+    StoriesView(viewModel: .preview, imageLoader: ImagePipeline.preview)
 }

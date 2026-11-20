@@ -12,13 +12,15 @@ import Testing
 @MainActor
 @Suite("StoriesViewModel")
 struct StoriesViewModelTests {
+    private let prefetcher = ImagePrefetcherSpy()
+
     private func makeSUT(
         _ result: Result<[Story], DomainError> = .success(Story.fixtures),
         city: String = "Paris"
     ) -> (StoriesViewModel, FetchCityStoriesUseCaseStub, StoriesNavigatorSpy) {
         let useCase = FetchCityStoriesUseCaseStub(result)
         let navigator = StoriesNavigatorSpy()
-        let sut = StoriesViewModel(city: city, fetchStories: useCase, storyDuration: .seconds(3))
+        let sut = StoriesViewModel(city: city, fetchStories: useCase, imagePrefetcher: prefetcher, storyDuration: .seconds(3))
         sut.navigator = navigator
         return (sut, useCase, navigator)
     }
@@ -217,6 +219,45 @@ struct StoriesViewModelTests {
         #expect(sut.progress(forStoryAt: 0) == 1)
         #expect(sut.progress(forStoryAt: 1) == 0.5)
         #expect(sut.progress(forStoryAt: 2) == 0)
+    }
+
+    // MARK: Prefetching
+
+    @Test("Once loaded, the second story's image is prefetched")
+    func prefetchesSecondStoryOnLoad() async {
+        let (sut, _, _) = makeSUT()
+
+        await sut.load()
+
+        #expect(prefetcher.prefetchedURLs == [Story.fixtures[1].imageURL])
+    }
+
+    @Test("Moving to a story prefetches the one after it, wrapping at the end")
+    func prefetchesNextStory() async {
+        let sut = await makePlayingSUT()
+
+        sut.next()
+        sut.next()
+
+        #expect(prefetcher.prefetchedURLs == [1, 2, 0].map { Story.fixtures[$0].imageURL })
+    }
+
+    @Test("A single story prefetches nothing: it's already on screen")
+    func singleStoryPrefetchesNothing() async {
+        let sut = await makePlayingSUT([.fixture("only")])
+
+        sut.next()
+
+        #expect(prefetcher.prefetchedURLs.isEmpty)
+    }
+
+    @Test("A failed load prefetches nothing")
+    func failedLoadPrefetchesNothing() async {
+        let (sut, _, _) = makeSUT(.failure(.offline))
+
+        await sut.load()
+
+        #expect(prefetcher.prefetchedURLs.isEmpty)
     }
 
     // MARK: Gestures

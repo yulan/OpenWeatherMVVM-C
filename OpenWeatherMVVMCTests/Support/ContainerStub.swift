@@ -6,6 +6,7 @@
 //
 
 import Domain
+import Foundation
 @testable import OpenWeatherMVVMC
 
 extension AppDependencyContainer {
@@ -17,6 +18,7 @@ extension AppDependencyContainer {
         AppDependencyContainer(
             fetchCurrentWeather: FetchCurrentWeatherUseCaseStub(.success(weather)),
             fetchCityStories: FetchCityStoriesUseCaseStub(.success(stories)),
+            imagePipeline: ImagePipeline { _ in throw URLError(.notConnectedToInternet) },
             urlOpener: urlOpener
         )
     }

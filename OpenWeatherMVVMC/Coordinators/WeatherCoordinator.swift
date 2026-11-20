@@ -36,6 +36,9 @@ final class WeatherCoordinator: Coordinator {
         weatherViewModel.navigator = self
     }
 
+    /// Handed to the stories view, alongside its ViewModel.
+    var imageLoader: any ImageLoading { container.imageLoader }
+
     func start() async {}
 }
 

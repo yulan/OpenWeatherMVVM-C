@@ -17,7 +17,7 @@ struct WeatherCoordinatorView: View {
         .fullScreenCover(item: $coordinator.destination) { destination in
             switch destination {
             case let .stories(viewModel):
-                StoriesView(viewModel: viewModel)
+                StoriesView(viewModel: viewModel, imageLoader: coordinator.imageLoader)
             }
         }
     }

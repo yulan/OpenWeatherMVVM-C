@@ -45,16 +45,19 @@ final class StoriesViewModel {
     @ObservationIgnored private let tick: Duration
     @ObservationIgnored private let clock: any Clock<Duration>
     @ObservationIgnored private let fetchStories: any FetchCityStoriesUseCase
+    @ObservationIgnored private let imagePrefetcher: any ImagePrefetching
 
     init(
         city: String,
         fetchStories: any FetchCityStoriesUseCase,
+        imagePrefetcher: any ImagePrefetching,
         storyDuration: Duration = .seconds(3),
         tick: Duration = .milliseconds(50),
         clock: any Clock<Duration> = ContinuousClock()
     ) {
         self.city = city
         self.fetchStories = fetchStories
+        self.imagePrefetcher = imagePrefetcher
         self.storyDuration = storyDuration
         self.tick = tick
         self.clock = clock
@@ -85,6 +88,7 @@ final class StoriesViewModel {
             state = stories.isEmpty
                 ? .failed(ErrorPresentation(L10n.Stories.emptyTitle, L10n.Stories.emptyMessage(city), .noPhotos, .retry))
                 : .loaded
+            prefetchNextStory()
         } catch {
             stories = []
             if let presentation = ErrorPresentation(error) {
@@ -144,6 +148,14 @@ final class StoriesViewModel {
         guard index != currentIndex else { return }
         currentIndex = index
         isCurrentStoryReady = false
+        prefetchNextStory()
+    }
+
+    /// While story n is on screen, story n+1 downloads, so the next tap or
+    /// auto-advance usually shows it immediately and the timer doesn't wait.
+    private func prefetchNextStory() {
+        guard stories.count > 1 else { return }
+        imagePrefetcher.prefetch([stories[(currentIndex + 1) % stories.count].imageURL])
     }
 
     // MARK: - Gestures

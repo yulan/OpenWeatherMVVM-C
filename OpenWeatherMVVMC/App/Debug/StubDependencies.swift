@@ -75,6 +75,7 @@ extension AppDependencyContainer {
             fetchCurrentWeather: StubFetchCurrentWeatherUseCase(weatherResults),
             // Unresolvable host: images fail fast, offline and deterministic.
             fetchCityStories: StubFetchCityStoriesUseCase(imageBaseURL: "https://stub.invalid"),
+            imagePipeline: .offline,
             urlOpener: SystemURLOpener()
         )
     }
@@ -88,7 +89,17 @@ extension WeatherViewModel {
 
 extension StoriesViewModel {
     static var preview: StoriesViewModel {
-        StoriesViewModel(city: "Paris", fetchStories: StubFetchCityStoriesUseCase())
+        StoriesViewModel(city: "Paris", fetchStories: StubFetchCityStoriesUseCase(), imagePrefetcher: ImagePipeline.preview)
+    }
+}
+
+extension ImagePipeline {
+    /// Real network, for previews.
+    static let preview = ImagePipeline.live()
+
+    /// Every image fails immediately: deterministic UI tests, no network.
+    static var offline: ImagePipeline {
+        ImagePipeline { _ in throw URLError(.notConnectedToInternet) }
     }
 }
 #endif
