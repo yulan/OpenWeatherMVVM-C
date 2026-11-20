@@ -13,6 +13,7 @@ extension Weather {
         name: String = "Paris",
         iconCode: String = "01d",
         temperature: Double = 18.5,
+        visibility: Int = 10_000,
         timeZone: TimeZone = TimeZone(secondsFromGMT: 7200)!
     ) -> Weather {
         Weather(
@@ -25,7 +26,7 @@ extension Weather {
             humidity: 60,
             wind: .init(speed: 3.1, degrees: 180, gust: nil),
             cloudiness: 0,
-            visibility: 10_000,
+            visibility: visibility,
             // 2022-04-18 06:40 / 20:40 UTC
             sunrise: Date(timeIntervalSince1970: 1_650_264_000),
             sunset: Date(timeIntervalSince1970: 1_650_314_400),

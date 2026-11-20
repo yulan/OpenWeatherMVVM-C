@@ -66,7 +66,7 @@ extension WeatherDisplayModel {
             metrics.append(metric(M.wind, fmt.speed(wind.speed) + direction, .wind))
         }
         if let pressure = weather.pressure {
-            metrics.append(metric(M.pressure, "\(fmt.integer(pressure)) hPa", .pressure))
+            metrics.append(metric(M.pressure, fmt.pressure(hectopascals: pressure), .pressure))
         }
         if let cloudiness = weather.cloudiness {
             metrics.append(metric(M.clouds, fmt.percent(cloudiness), .clouds))
@@ -98,13 +98,18 @@ extension WeatherDisplayModel {
 
 // MARK: - Formatting helpers
 
+/// The Data layer always delivers metric values (°C, m/s, m, hPa). Here they
+/// are converted to the units people expect in `locale`: °F/mph/mi/inHg in
+/// the US, °C/mph/mi/mbar in the UK, °C/km/h/km/hPa in France…
 private struct Formatter {
     let locale: Locale
     let timeZone: TimeZone
 
+    /// "19°": converted for the locale, rounded half-up like every weather
+    /// app, and never "-0°" for values in (-0.5, 0).
     func temperature(_ celsius: Double) -> String {
-        // Avoid "-0°" for values in (-0.5, 0).
-        let rounded = celsius.rounded()
+        let unit = UnitTemperature(forLocale: locale, usage: .weather)
+        let rounded = Measurement(value: celsius, unit: UnitTemperature.celsius).converted(to: unit).value.rounded()
         return integer(rounded == 0 ? 0 : Int(rounded)) + "°"
     }
 
@@ -123,21 +128,32 @@ private struct Formatter {
         "\(integer(value))%"
     }
 
+    /// "11 km/h" / "7 mph".
     func speed(_ metersPerSecond: Double) -> String {
-        metersPerSecond.formatted(.number.precision(.fractionLength(0...1)).locale(locale)) + " m/s"
+        Measurement(value: metersPerSecond, unit: UnitSpeed.metersPerSecond).formatted(
+            .measurement(width: .abbreviated, usage: .wind, numberFormatStyle: .number.precision(.fractionLength(0)))
+                .locale(locale)
+        )
     }
 
+    /// "10 km" / "6.2 mi" / "550 yd": two significant digits is all a
+    /// visibility reading deserves.
     func distance(meters: Int) -> String {
-        guard meters >= 1000 else { return "\(integer(meters)) m" }
-        let km = Double(meters) / 1000
-        return km.formatted(.number.precision(.fractionLength(0...1)).locale(locale)) + " km"
+        Measurement(value: Double(meters), unit: UnitLength.meters).formatted(
+            .measurement(width: .abbreviated, usage: .road, numberFormatStyle: .number.precision(.significantDigits(1...2)))
+                .locale(locale)
+        )
     }
 
-    func time(_ date: Date) -> String {
-        var style = Date.FormatStyle(date: .omitted, time: .shortened)
-        style.locale = locale
-        style.timeZone = timeZone
-        return date.formatted(style)
+    /// "1,013 hPa" / "1,013 mbar" / "29.91 inHg". Inches of mercury need two
+    /// decimals to be useful; the formatter's default would print "30 inHg".
+    func pressure(hectopascals: Int) -> String {
+        let unit = UnitPressure(forLocale: locale, usage: .barometric)
+        let fractionDigits = unit.symbol == UnitPressure.inchesOfMercury.symbol ? 2 : 0
+        return Measurement(value: Double(hectopascals), unit: UnitPressure.hectopascals).converted(to: unit).formatted(
+            .measurement(width: .abbreviated, usage: .asProvided, numberFormatStyle: .number.precision(.fractionLength(fractionDigits)))
+                .locale(locale)
+        )
     }
 
     /// "2 hours ago". A provider clock slightly ahead of ours reads as "now",
@@ -148,6 +164,13 @@ private struct Formatter {
         formatter.dateTimeStyle = .named
         formatter.unitsStyle = .full
         return formatter.localizedString(for: min(date, now), relativeTo: now)
+    }
+
+    func time(_ date: Date) -> String {
+        var style = Date.FormatStyle(date: .omitted, time: .shortened)
+        style.locale = locale
+        style.timeZone = timeZone
+        return date.formatted(style)
     }
 
     func date(_ date: Date) -> String {

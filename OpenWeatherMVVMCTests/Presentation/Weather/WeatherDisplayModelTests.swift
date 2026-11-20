@@ -53,8 +53,33 @@ struct WeatherDisplayModelTests {
         let sut = WeatherDisplayModel(weather: .fixture(), locale: .testLocale, now: .testNow)
 
         #expect(sut.metrics.map(\.title) == ["Feels Like", "Humidity", "Wind", "Pressure", "Clouds", "Visibility"])
-        #expect(sut.metrics.map(\.value) == ["18°", "60%", "3.1 m/s S", "1,013 hPa", "0%", "10 km"])
+        #expect(sut.metrics.map(\.value) == ["18°", "60%", "7 mph S", "1,013 mbar", "0%", "6.2 mi"])
         #expect(sut.metrics.map(\.symbol) == [.feelsLike, .humidity, .wind, .pressure, .clouds, .visibility])
+    }
+
+    @Test("Units follow the user's locale, not the API's metric values", arguments: [
+        ("en_US", "65°", "7 mph S", "29.91 inHg", "6.2 mi"),
+        ("en_GB", "19°", "7 mph S", "1,013 mbar", "6.2 mi"),
+        ("fr_FR", "19°", "11 km/h S", "1 013 hPa", "10 km"),
+    ])
+    func localeUnits(identifier: String, temperature: String, wind: String, pressure: String, visibility: String) {
+        let sut = WeatherDisplayModel(weather: .fixture(), locale: Locale(identifier: identifier), now: .testNow)
+        let values = Dictionary(uniqueKeysWithValues: sut.metrics.map { ($0.symbol, $0.value.withPlainSpaces) })
+
+        #expect(sut.temperature == temperature)
+        #expect(values[.wind] == wind)
+        #expect(values[.pressure] == pressure)
+        #expect(values[.visibility] == visibility)
+    }
+
+    @Test("Short visibilities are shown with sensible precision", arguments: [
+        ("en_GB", 500, "550 yd"),
+        ("en_US", 500, "1,600 ft"),
+        ("fr_FR", 1_500, "1,5 km"),
+    ])
+    func shortVisibility(identifier: String, meters: Int, expected: String) {
+        let sut = WeatherDisplayModel(weather: .fixture(visibility: meters), locale: Locale(identifier: identifier), now: .testNow)
+        #expect(sut.metrics.first { $0.symbol == .visibility }?.value.withPlainSpaces == expected)
     }
 
     @Test("Never displays negative zero", arguments: [-0.4, -0.0, 0.3])
@@ -90,5 +115,14 @@ struct WeatherDisplayModelTests {
     ])
     func compass(degrees: Int, expected: String) {
         #expect(CompassDirection(degrees: degrees).abbreviation == expected)
+    }
+}
+
+private extension String {
+    /// French typography separates thousands and units with narrow no-break
+    /// spaces (U+202F, or U+00A0 depending on the OS's ICU version). Compare the
+    /// text, not the exact space character.
+    var withPlainSpaces: String {
+        replacing(/[\u{00A0}\u{202F}]/, with: " ")
     }
 }
