@@ -1,0 +1,65 @@
+version: 2.1
+
+# Every job calls a Fastlane lane, so a red build reproduces locally with
+# `bundle exec fastlane <lane>`. API keys are not needed: tests run on stubs.
+
+executors:
+  xcode:
+    macos:
+      xcode: 27.2.0
+    resource_class: m4pro.medium
+    environment:
+      # Fastlane requires a UTF-8 locale.
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+      FASTLANE_SKIP_UPDATE_CHECK: "1"
+      FASTLANE_HIDE_CHANGELOG: "1"
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+
+commands:
+  install-gems:
+    steps:
+      - restore_cache:
+          keys:
+            - gems-v1-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Install Fastlane
+          command: |
+            bundle config set --local path vendor/bundle
+            bundle install --jobs 4 --retry 3
+      - save_cache:
+          key: gems-v1-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+jobs:
+  package-tests:
+    executor: xcode
+    steps:
+      - checkout
+      - install-gems
+      - run:
+          name: Domain + Data tests (macOS, no simulator)
+          command: bundle exec fastlane package_tests
+
+  app-tests:
+    executor: xcode
+    steps:
+      - checkout
+      - install-gems
+      - run:
+          name: Full test plan (unit + UI, simulator)
+          command: bundle exec fastlane test
+      - store_test_results:
+          path: fastlane/test_output
+      - store_artifacts:
+          path: fastlane/test_output
+
+workflows:
+  test:
+    jobs:
+      - package-tests
+      # Fail fast: the ~1 s package job gates the expensive simulator job.
+      - app-tests:
+          requires:
+            - package-tests

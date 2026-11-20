@@ -1,0 +1,38 @@
+# Lanes are the single source of truth for CI: CircleCI only calls them, so a
+# failing CI job reproduces locally with the exact same command.
+#
+#   bundle exec fastlane package_tests   # Domain + Data, natively on macOS (~1 s)
+#   bundle exec fastlane test            # whole test plan on a simulator
+#   bundle exec fastlane ci              # both, in that order
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Domain and Data layer tests, natively on macOS: no simulator, fast feedback"
+  lane :package_tests do
+    # `sh` runs from the fastlane/ directory.
+    sh("cd ../Packages/OpenWeatherCore && swift test")
+  end
+
+  desc "Every bundle of OpenWeatherMVVMC.xctestplan: package, unit and UI tests"
+  lane :test do
+    run_tests(
+      project: "OpenWeatherMVVMC.xcodeproj",
+      scheme: "OpenWeatherMVVMC",
+      testplan: "OpenWeatherMVVMC",
+      # Optional override, e.g. TEST_DEVICE="iPhone 17". Default: Fastlane picks one.
+      device: ENV["TEST_DEVICE"],
+      result_bundle: true,
+      output_directory: "fastlane/test_output",
+      output_types: "junit",
+      output_files: "report.junit",
+      fail_build: true
+    )
+  end
+
+  desc "What CI runs: fast package tests first, then the full test plan"
+  lane :ci do
+    package_tests
+    test
+  end
+end

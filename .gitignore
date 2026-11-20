@@ -14,5 +14,15 @@ build/
 Packages/**/.swiftpm/
 Packages/**/Package.resolved
 
+# Claude Code (personal settings; shared agents in .claude/agents are committed)
+.claude/settings.local.json
+
 # macOS
 .DS_Store
+
+# Ruby / Fastlane
+vendor/bundle/
+.bundle/
+fastlane/report.xml
+fastlane/README.md
+fastlane/test_output/
