@@ -1,10 +1,10 @@
 # OpenWeatherMVVM-C
 
-A rewrite of [OpenWeatherTCATest](../OpenWeatherTCATest) using **MVVM-C (Model-View-ViewModel + Coordinator)** on top of **Clean Architecture**, with **Swift 6** strict concurrency, **SwiftUI**, `@Observable` and **Swift Concurrency**. There are no third-party dependencies.
+A rewrite of [OpenWeatherTCATest](../OpenWeatherTCATest) using **MVVM-C (Model-View-ViewModel + Coordinator)** on top of **Clean Architecture**, with **Swift 6** strict concurrency, **SwiftUI**, `@Observable` and **Swift Concurrency**. The app has no third-party dependencies (Fastlane is a development tool only).
 
 It has the same features as the TCA version:
 
-1. **Weather**: locates the user and shows the current weather from OpenWeatherMap. Offline, it falls back to the last saved weather (if it is less than 24 h old and within 25 km), and the header always says how old the data is.
+1. **Weather**: locates the user and shows the current weather from OpenWeatherMap. Offline, it falls back to the last saved weather (if it is less than 24 h old and within 25 km), and the header always says how old the data is. Units follow the user's region: °F, mph and inHg in the US; °C and mph in the UK; °C and km/h in France.
 2. **Stories**: Instagram-style full-screen photos of the city from Unsplash. They auto-advance every 3 s, and you can tap or swipe to navigate and hold to pause. The next photo is prefetched while the current one is on screen.
 
 ---
@@ -74,6 +74,12 @@ WeatherCoordinator   WeatherViewModel ──showStories(city)──▶ destinati
 - Story images go through `ImagePipeline`, an `actor` that shares one in-flight download per URL between all callers (prefetches included), keeps decoded images in memory and decodes off the main thread.
 - Test doubles use `Synchronization.Mutex` instead of `@unchecked Sendable`.
 
+### Observability
+
+- `os.Logger` per layer (`network`, `location`, `cache`, `images`, `ui`), all under the app's bundle identifier, so one Console filter shows a whole session. Values are private by default; API keys and coordinates never appear in clear text.
+- `OSSignposter` intervals (*HTTP request*, *Location fix*, *Image download*) show up in Instruments' *Points of Interest*.
+- Errors that used to be swallowed (a failed cache write, an unreadable saved file) are now logged.
+
 ---
 
 ## Project structure
@@ -82,6 +88,12 @@ WeatherCoordinator   WeatherViewModel ──showStories(city)──▶ destinati
 OpenWeatherMVVM-C/
 ├── OpenWeatherMVVMC.xcodeproj         (synchronized folders: add files without touching the project)
 ├── OpenWeatherMVVMC.xctestplan        runs all 4 test bundles (package + app + UI)
+├── fastlane/Fastfile                  package_tests, test, ci lanes (what CI runs)
+├── .circleci/config.yml               CircleCI: package job gates the simulator job
+├── docs/adr/                          Architecture Decision Records
+├── CONTRIBUTING.md                    setup, architecture rules, review checklist
+├── AGENTS.md, CLAUDE.md               the same rules for AI coding agents
+├── .claude/agents/ios-reviewer.md     review agent for diffs
 ├── Configurations/
 │   ├── Base.xcconfig                  #include? "Secrets.xcconfig"
 │   ├── Secrets.example.xcconfig       → copy to Secrets.xcconfig (git-ignored)
@@ -111,7 +123,7 @@ OpenWeatherMVVM-C/
 
 ## Getting started
 
-Requirements: Xcode 26+ and iOS 18.0+.
+Requirements: Xcode 27+ (CI uses 27.2), iOS 18.0+, and Ruby with Bundler for Fastlane.
 
 1. Add your API keys:
    ```bash
@@ -122,22 +134,33 @@ Requirements: Xcode 26+ and iOS 18.0+.
 
 ## Tests
 
-`⌘U` runs the test plan. Last verified run, read from the `.xcresult`:
+`⌘U` runs the test plan; so does Fastlane, which is what CI calls:
+
+```bash
+bundle install                        # once
+bundle exec fastlane package_tests    # Domain + Data on macOS, ~1 s
+bundle exec fastlane test             # whole test plan on a simulator
+bundle exec fastlane ci               # both: exactly what CircleCI runs
+```
+
+Last verified run, read from the `.xcresult`:
 
 | Bundle | Test functions | Framework |
 |---|---|---|
 | DomainTests | 7 | Swift Testing |
-| DataLayerTests | 38 | Swift Testing |
-| OpenWeatherMVVMCTests | 68 | Swift Testing |
+| DataLayerTests | 40 | Swift Testing |
+| OpenWeatherMVVMCTests | 70 | Swift Testing |
 | OpenWeatherMVVMCUITests | 3 | XCTest (XCUITest) |
 
-Parameterized tests count once here; they expand to many cases.
+Parameterized tests count once here; they expand to many cases. No unit test depends on wall-clock timing: time is injected as a `Clock` or as explicit instants.
 
-The Domain and Data layers can also be tested natively on macOS in about 1 second:
+---
 
-```bash
-cd Packages/OpenWeatherCore && swift test
-```
+## Contributing
+
+- [CONTRIBUTING.md](CONTRIBUTING.md): setup, architecture rules, how to add a screen, the code review checklist.
+- [docs/adr](docs/adr): why the code looks the way it does. One decision per file, with the alternatives we rejected.
+- [AGENTS.md](AGENTS.md): the same rules for AI coding agents. Claude Code loads it through `CLAUDE.md`, and `.claude/agents/ios-reviewer.md` reviews a diff against the checklist.
 
 ---
 
