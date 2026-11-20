@@ -17,7 +17,7 @@ struct WeatherViewModelTests {
     ) -> (WeatherViewModel, FetchCurrentWeatherUseCaseStub, WeatherNavigatorSpy) {
         let useCase = FetchCurrentWeatherUseCaseStub(results)
         let navigator = WeatherNavigatorSpy()
-        let sut = WeatherViewModel(fetchCurrentWeather: useCase, locale: .testLocale)
+        let sut = WeatherViewModel(fetchCurrentWeather: useCase, locale: .testLocale, now: { .testNow })
         sut.navigator = navigator
         return (sut, useCase, navigator)
     }
@@ -35,7 +35,7 @@ struct WeatherViewModelTests {
 
         await sut.onAppear()
 
-        #expect(sut.state == .loaded(WeatherDisplayModel(weather: .fixture(), locale: .testLocale)))
+        #expect(sut.state == .loaded(WeatherDisplayModel(weather: .fixture(), locale: .testLocale, now: .testNow)))
     }
 
     @Test("Appearing again does not reload")
@@ -79,7 +79,7 @@ struct WeatherViewModelTests {
 
         await sut.onAppear()
         #expect(useCase.callCount == 2)
-        #expect(sut.state == .loaded(WeatherDisplayModel(weather: .fixture(), locale: .testLocale)))
+        #expect(sut.state == .loaded(WeatherDisplayModel(weather: .fixture(), locale: .testLocale, now: .testNow)))
     }
 
     @Test("Retry after a failure loads the weather")
@@ -89,7 +89,7 @@ struct WeatherViewModelTests {
         await sut.onAppear()
         await sut.recover(.retry)
 
-        #expect(sut.state == .loaded(WeatherDisplayModel(weather: .fixture(), locale: .testLocale)))
+        #expect(sut.state == .loaded(WeatherDisplayModel(weather: .fixture(), locale: .testLocale, now: .testNow)))
     }
 
     @Test("Refreshing replaces the content with fresh data")
@@ -144,7 +144,7 @@ struct WeatherViewModelTests {
         await sut.onAppear()
         await sut.load()
 
-        #expect(sut.state == .loaded(WeatherDisplayModel(weather: .fixture(), locale: .testLocale)))
+        #expect(sut.state == .loaded(WeatherDisplayModel(weather: .fixture(), locale: .testLocale, now: .testNow)))
         #expect(sut.refreshError == ErrorPresentation(.offline))
         #expect(sut.isRefreshErrorPresented)
     }
@@ -181,7 +181,7 @@ struct WeatherViewModelTests {
         await sut.sceneDidBecomeActive()
 
         #expect(useCase.callCount == 2)
-        #expect(sut.state == .loaded(WeatherDisplayModel(weather: .fixture(), locale: .testLocale)))
+        #expect(sut.state == .loaded(WeatherDisplayModel(weather: .fixture(), locale: .testLocale, now: .testNow)))
     }
 
     @Test("Coming back to the foreground doesn't reload for other errors or loaded content", arguments: [

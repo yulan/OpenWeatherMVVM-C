@@ -43,6 +43,11 @@ extension Story {
     static let fixtures: [Story] = ["1", "2", "3"].map(fixture)
 }
 
+extension Date {
+    /// Two hours after `Weather.fixture()` was observed.
+    static let testNow = Date(timeIntervalSince1970: 1_650_280_800 + 2 * 60 * 60)
+}
+
 extension Locale {
     static let testLocale = Locale(identifier: "en_GB")
 }

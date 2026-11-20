@@ -19,6 +19,8 @@ struct WeatherDisplayModel: Equatable {
     }
 
     let date: String
+    /// "Updated 2 hours ago": makes data served from the offline cache visible.
+    let lastUpdated: String
     let locationName: String
     let symbolName: String
     let temperature: String
@@ -31,11 +33,12 @@ struct WeatherDisplayModel: Equatable {
 }
 
 extension WeatherDisplayModel {
-    init(weather: Weather, locale: Locale) {
+    init(weather: Weather, locale: Locale, now: Date) {
         let condition = weather.primaryCondition
         let fmt = Formatter(locale: locale, timeZone: weather.timeZone)
 
         date = fmt.date(weather.observedAt)
+        lastUpdated = L10n.Weather.updated(fmt.relative(weather.observedAt, to: now)).resolved(in: locale)
         locationName = [weather.locationName, weather.countryCode]
             .compactMap { $0 }
             .joined(separator: ", ")
@@ -77,6 +80,7 @@ extension WeatherDisplayModel {
     /// Plausible content for the redacted loading skeleton.
     static let placeholder = WeatherDisplayModel(
         date: "Monday 1 January",
+        lastUpdated: "Updated 10 minutes ago",
         locationName: "Placeholder City",
         symbolName: "cloud.sun.fill",
         temperature: "20°",
@@ -134,6 +138,16 @@ private struct Formatter {
         style.locale = locale
         style.timeZone = timeZone
         return date.formatted(style)
+    }
+
+    /// "2 hours ago". A provider clock slightly ahead of ours reads as "now",
+    /// never as "in 2 minutes".
+    func relative(_ date: Date, to now: Date) -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.locale = locale
+        formatter.dateTimeStyle = .named
+        formatter.unitsStyle = .full
+        return formatter.localizedString(for: min(date, now), relativeTo: now)
     }
 
     func date(_ date: Date) -> String {

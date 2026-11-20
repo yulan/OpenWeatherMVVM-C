@@ -12,9 +12,13 @@ struct WeatherHeaderView: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            Text(model.date)
-                .font(.title3)
-                .foregroundStyle(.white.opacity(0.8))
+            VStack(spacing: 2) {
+                Text(model.date)
+                    .font(.title3)
+                Text(model.lastUpdated)
+                    .font(.footnote)
+            }
+            .foregroundStyle(.white.opacity(0.8))
 
             Text(model.locationName)
                 .font(.largeTitle.bold())

@@ -14,7 +14,7 @@ import Testing
 struct WeatherDisplayModelTests {
     @Test("Formats the headline values")
     func headline() {
-        let sut = WeatherDisplayModel(weather: .fixture(), locale: .testLocale)
+        let sut = WeatherDisplayModel(weather: .fixture(), locale: .testLocale, now: .testNow)
 
         #expect(sut.locationName == "Paris, FR")
         #expect(sut.temperature == "19°")
@@ -26,8 +26,8 @@ struct WeatherDisplayModelTests {
 
     @Test("Formats the date and sun times in the location's time zone, not the device's")
     func timesUseLocationTimeZone() {
-        let utcPlus2 = WeatherDisplayModel(weather: .fixture(timeZone: TimeZone(secondsFromGMT: 7200)!), locale: .testLocale)
-        let utc = WeatherDisplayModel(weather: .fixture(timeZone: TimeZone(secondsFromGMT: 0)!), locale: .testLocale)
+        let utcPlus2 = WeatherDisplayModel(weather: .fixture(timeZone: TimeZone(secondsFromGMT: 7200)!), locale: .testLocale, now: .testNow)
+        let utc = WeatherDisplayModel(weather: .fixture(timeZone: TimeZone(secondsFromGMT: 0)!), locale: .testLocale, now: .testNow)
 
         #expect(utcPlus2.date == "Monday 18 April")
         #expect(utcPlus2.sunrise == "8:40")
@@ -35,9 +35,22 @@ struct WeatherDisplayModelTests {
         #expect(utc.sunrise == "6:40")
     }
 
+    @Test("Says how old the data is, so weather served offline isn't mistaken for live data")
+    func lastUpdated() {
+        let sut = WeatherDisplayModel(weather: .fixture(), locale: .testLocale, now: .testNow)
+        #expect(sut.lastUpdated == "Updated 2 hours ago")
+    }
+
+    @Test("A provider clock slightly ahead of ours reads as \"now\", never as the future")
+    func lastUpdatedClockSkew() {
+        let observedAt = Weather.fixture().observedAt
+        let sut = WeatherDisplayModel(weather: .fixture(), locale: .testLocale, now: observedAt.addingTimeInterval(-90))
+        #expect(sut.lastUpdated == "Updated now")
+    }
+
     @Test("Builds the metric tiles")
     func metrics() {
-        let sut = WeatherDisplayModel(weather: .fixture(), locale: .testLocale)
+        let sut = WeatherDisplayModel(weather: .fixture(), locale: .testLocale, now: .testNow)
 
         #expect(sut.metrics.map(\.title) == ["Feels Like", "Humidity", "Wind", "Pressure", "Clouds", "Visibility"])
         #expect(sut.metrics.map(\.value) == ["18°", "60%", "3.1 m/s S", "1,013 hPa", "0%", "10 km"])
@@ -46,13 +59,13 @@ struct WeatherDisplayModelTests {
 
     @Test("Never displays negative zero", arguments: [-0.4, -0.0, 0.3])
     func noNegativeZero(temperature: Double) {
-        let sut = WeatherDisplayModel(weather: .fixture(temperature: temperature), locale: .testLocale)
+        let sut = WeatherDisplayModel(weather: .fixture(temperature: temperature), locale: .testLocale, now: .testNow)
         #expect(sut.temperature == "0°")
     }
 
     @Test("Night icon codes switch to the night theme")
     func night() {
-        let sut = WeatherDisplayModel(weather: .fixture(iconCode: "01n"), locale: .testLocale)
+        let sut = WeatherDisplayModel(weather: .fixture(iconCode: "01n"), locale: .testLocale, now: .testNow)
         #expect(sut.isNight)
         #expect(sut.symbolName == "moon.stars.fill")
     }

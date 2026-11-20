@@ -33,13 +33,19 @@ final class WeatherViewModel {
 
     @ObservationIgnored private let fetchCurrentWeather: any FetchCurrentWeatherUseCase
     @ObservationIgnored private let locale: Locale
+    @ObservationIgnored private let now: @Sendable () -> Date
     @ObservationIgnored private var weather: Weather?
     @ObservationIgnored private var lastError: DomainError?
     @ObservationIgnored private var isLoading = false
 
-    init(fetchCurrentWeather: any FetchCurrentWeatherUseCase, locale: Locale = .autoupdatingCurrent) {
+    init(
+        fetchCurrentWeather: any FetchCurrentWeatherUseCase,
+        locale: Locale = .autoupdatingCurrent,
+        now: @escaping @Sendable () -> Date = Date.init
+    ) {
         self.fetchCurrentWeather = fetchCurrentWeather
         self.locale = locale
+        self.now = now
     }
 
     // MARK: - Inputs
@@ -64,7 +70,7 @@ final class WeatherViewModel {
             self.weather = weather
             lastError = nil
             refreshError = nil
-            state = .loaded(WeatherDisplayModel(weather: weather, locale: locale))
+            state = .loaded(WeatherDisplayModel(weather: weather, locale: locale, now: now()))
         } catch {
             guard let presentation = ErrorPresentation(error) else {
                 // Cancelled before anything was shown: let the next appearance retry.

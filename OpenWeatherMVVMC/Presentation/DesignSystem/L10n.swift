@@ -24,6 +24,10 @@ enum L10n {
         static func highLow(high: String, low: String) -> LocalizedStringResource {
             LocalizedStringResource("weather.highLow", defaultValue: "H:\(high)  L:\(low)")
         }
+        /// `relative` is already localized, e.g. "2 hours ago" / "il y a 2 heures".
+        static func updated(_ relative: String) -> LocalizedStringResource {
+            LocalizedStringResource("weather.updated", defaultValue: "Updated \(relative)")
+        }
         static func sunrise(_ time: String) -> LocalizedStringResource {
             LocalizedStringResource("weather.sunrise.a11y", defaultValue: "Sunrise \(time)")
         }
