@@ -4,8 +4,8 @@ A rewrite of [OpenWeatherTCATest](../OpenWeatherTCATest) using **MVVM-C (Model-V
 
 It has the same features as the TCA version:
 
-1. **Weather**: locates the user and shows the current weather from OpenWeatherMap.
-2. **Stories**: Instagram-style full-screen photos of the city from Unsplash. They auto-advance every 3 s, and you can tap or swipe to navigate and hold to pause.
+1. **Weather**: locates the user and shows the current weather from OpenWeatherMap. Offline, it falls back to the last saved weather (if it is less than 24 h old and within 25 km), and the header always says how old the data is.
+2. **Stories**: Instagram-style full-screen photos of the city from Unsplash. They auto-advance every 3 s, and you can tap or swipe to navigate and hold to pause. The next photo is prefetched while the current one is on screen.
 
 ---
 
@@ -22,7 +22,9 @@ It has the same features as the TCA version:
                                           ▼ depends on use-case protocols
 ┌──────────── Packages/OpenWeatherCore (local SPM) ────────────┐
 │  DataLayer   APIClient, Endpoints, DTOs, Remote*Repository,  │
-│              CoreLocationRepository          ──implements──▶ │
+│              CachedWeatherRepository (decorator),            │
+│              FileWeatherStore, CoreLocationRepository        │
+│                                              ──implements──▶ │
 │  Domain      Entities, DomainError, Repository protocols,    │
 │              Use cases                (no dependencies)       │
 └──────────────────────────────────────────────────────────────┘
@@ -69,6 +71,7 @@ WeatherCoordinator   WeatherViewModel ──showStories(city)──▶ destinati
 - **Typed throws** (`throws(DomainError)`) at every repository and use-case boundary, so ViewModels `switch` exhaustively over errors.
 - Lifetime is structured: work runs in `.task {}` / `.task(id:)` and is cancelled automatically when the view disappears. No ViewModel stores a `Task`. Cancellation maps to `DomainError.cancelled` and is never shown to the user.
 - `APIClient.send` is explicitly `@concurrent`, so decoding is guaranteed to run off the main actor.
+- Story images go through `ImagePipeline`, an `actor` that shares one in-flight download per URL between all callers (prefetches included), keeps decoded images in memory and decodes off the main thread.
 - Test doubles use `Synchronization.Mutex` instead of `@unchecked Sendable`.
 
 ---
@@ -91,6 +94,7 @@ OpenWeatherMVVM-C/
 │   ├── Presentation/
 │   │   ├── DesignSystem/              L10n (all wording), AppSymbol (all SF Symbols)
 │   │   ├── Common/                    ErrorPresentation, ErrorStateView, GlassCard, SkyGradient
+│   │   │   └── Images/                ImageLoading / ImagePrefetching, ImagePipeline (actor)
 │   │   ├── Splash/
 │   │   ├── Weather/                   WeatherViewModel, WeatherDisplayModel, WeatherView, Components/
 │   │   └── Stories/                   StoriesViewModel, StoriesView, Components/
@@ -99,8 +103,8 @@ OpenWeatherMVVM-C/
 ├── OpenWeatherMVVMCUITests/           end-to-end flows on deterministic stubs
 └── Packages/OpenWeatherCore/
     ├── Sources/Domain/                Entities, Errors, Repositories (protocols), UseCases
-    ├── Sources/DataLayer/             Network, Endpoints, DTOs, Repositories, Location
-    └── Tests/                         mirror the sources: UseCases/, Network/, DTOs/, Repositories/, Location/
+    ├── Sources/DataLayer/             Network, Endpoints, DTOs, Repositories, Persistence, Location
+    └── Tests/                         mirror the sources: UseCases/, Network/, DTOs/, Repositories/, Persistence/, Location/
 ```
 
 ---
@@ -123,8 +127,8 @@ Requirements: Xcode 26+ and iOS 18.0+.
 | Bundle | Test functions | Framework |
 |---|---|---|
 | DomainTests | 7 | Swift Testing |
-| DataLayerTests | 24 | Swift Testing |
-| OpenWeatherMVVMCTests | 54 | Swift Testing |
+| DataLayerTests | 38 | Swift Testing |
+| OpenWeatherMVVMCTests | 68 | Swift Testing |
 | OpenWeatherMVVMCUITests | 3 | XCTest (XCUITest) |
 
 Parameterized tests count once here; they expand to many cases.
